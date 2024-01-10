@@ -1,0 +1,15 @@
+body {
+	font-size: 14px;
+    font-family: Consolas, 'Lucida Console', monospace;
+    background-color: #000000 !important;
+    color: rgb(339, 237, 233) !important;
+    text-align: center;
+}
+
+.buttons {
+    margin-top:5px;
+}
+.resp {
+    display: none;
+    
+}

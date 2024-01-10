@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <link rel="stylesheet" href="index.css">
+    <title>FindMyPhone</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        let config;
+
+        $.ajax({
+            url: 'index.php',
+            type: 'post',
+            dataType: 'json',
+            success: function (data) {
+                config = data;
+                console.log(config);
+            }
+        });
+        window.onload = function () {
+            var select = document.getElementById('device');
+            var ton = document.getElementById('ton');
+            var sound = config.ownSoundFiles;
+            var devices = config.devices;
+
+            for (var i = 0; i < devices.length; i++) {
+                var opt = document.createElement('option');
+                opt.value = devices[i];
+                opt.innerHTML = devices[i];
+                select.appendChild(opt);
+            }
+            for (var i = 0; i < sound.length; i++) {
+                var opt = document.createElement('option');
+                opt.value = sound[i];
+                opt.innerHTML = sound[i];
+                ton.insertBefore(opt, ton.firstChild);
+                document.getElementById('ton').value = sound[i];
+            }
+
+        }
+
+
+
+        function notify() {
+
+            let data = {
+                token: config.token,
+                user: config.user,
+                device: document.getElementById('device').value,
+                title: document.getElementById('title').value,
+                message: document.getElementById('message').value,
+                priority: document.getElementById('priority').value,
+                sound: document.getElementById('ton').value,
+                expire: "10800",
+                retry: "30"
+            };
+
+
+            fetch("https://api.pushover.net/1/messages.json", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(res => {
+                console.log("Request complete! response:", res);
+                if (res.statusText = "OK") {
+                    document.getElementById('resp').innerHTML = "sent";
+                    document.getElementById('resp').style.display = "inline";
+
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <html>
+    <br>
+    <label class="buttons" for="title">Title:</label>
+    <input class="buttons" type="text" id="title" name="title" value="FindMyPhone!" required> <br>
+    <label class="buttons" for="message">Message:</label>
+    <input class="buttons" type="text" id="message" name="message" value="find me!!" required> <br>
+    <label class="buttons" for="priority">Priority:</label>
+    <input class="buttons" type="number" id="priority" name="priority" value="2" min="-2" max="2" required> <br>
+
+
+    <label class="buttons" for="device">Device:</label>
+    <select class="buttons" id="device">
+    </select>
+    <br>
+    <label class="buttons" for="ton">Choose a dinosaur:</label>
+    <select class="buttons" id="ton">
+        <option value="updown">Standart</option>
+        <option value="beep">BeepBeep</option>
+        <option value="bike">Bike</option>
+        <option value="bugle">Bugle</option>
+        <option value="cashregister">Cashregister</option>
+        <option value="classical">classical</option>
+        <option value="tugboat">Tugboat</option>
+        <option value="persistent">Persistent</option>
+    </select>
+
+    <label class="resp" id="resp">asdf</label><br>
+
+    <button style="margin-top:20px;" id="notify" onclick="notify()">FindMyPhone!</button>
+
+    </html>
+
+
+</body>
