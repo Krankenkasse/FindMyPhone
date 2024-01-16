@@ -4,7 +4,7 @@
 <head>
     <link rel="stylesheet" href="index.css">
     <title>FindMyPhone</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         let config;
 
@@ -15,30 +15,26 @@
             success: function (data) {
                 config = data;
                 console.log(config);
+                var select = document.getElementById('device');
+                var ton = document.getElementById('ton');
+                var sound = config.ownSoundFiles;
+                var devices = config.devices;
+
+                for (var i = 0; i < devices.length; i++) {
+                    var opt = document.createElement('option');
+                    opt.value = devices[i];
+                    opt.innerHTML = devices[i];
+                    select.appendChild(opt);
+                }
+                for (var i = 0; i < sound.length; i++) {
+                    var opt = document.createElement('option');
+                    opt.value = sound[i];
+                    opt.innerHTML = sound[i];
+                    ton.insertBefore(opt, ton.firstChild);
+                    document.getElementById('ton').value = sound[i];
+                }
             }
         });
-        window.onload = function () {
-            var select = document.getElementById('device');
-            var ton = document.getElementById('ton');
-            var sound = config.ownSoundFiles;
-            var devices = config.devices;
-
-            for (var i = 0; i < devices.length; i++) {
-                var opt = document.createElement('option');
-                opt.value = devices[i];
-                opt.innerHTML = devices[i];
-                select.appendChild(opt);
-            }
-            for (var i = 0; i < sound.length; i++) {
-                var opt = document.createElement('option');
-                opt.value = sound[i];
-                opt.innerHTML = sound[i];
-                ton.insertBefore(opt, ton.firstChild);
-                document.getElementById('ton').value = sound[i];
-            }
-
-        }
-
 
 
         function notify() {
